@@ -50,6 +50,23 @@ public class SieViewControllerTest {
     }
 
     @Test
+    public void testShowNoPersonIdInSession() throws Exception {
+        // Given
+        final RenderRequest renderRequest = mock(RenderRequest.class);
+        final Model model = mock(Model.class);
+
+        PortletSession portletSession = mock(PortletSession.class);
+        when(portletSession.getAttribute("personId")).thenReturn(null);
+        when(renderRequest.getPortletSession()).thenReturn(portletSession);
+
+        // When
+        String view = sieViewController.show(renderRequest, model);
+
+        // Then
+        assertEquals(SieViewController.START_FORM_JSP, view);
+    }
+
+    @Test
     public void testStart() throws Exception {
 
         // Given
@@ -62,6 +79,20 @@ public class SieViewControllerTest {
 
         // Then (verify an event is set on the response)
         verify(actionResponse).setEvent(any(QName.class), any(Serializable.class));
+    }
+    @Test
+    public void testStartNoPersonId() throws Exception {
+
+        // Given
+        Model model = mock(Model.class);
+        ActionResponse actionResponse = mock(ActionResponse.class);
+        ActionRequest actionRequest = mock(ActionRequest.class);
+
+        // When
+        sieViewController.start(null, actionRequest, actionResponse, model);
+
+        // Then (verify an event is NOT set on the response)
+        verify(actionResponse, times(0)).setEvent(any(QName.class), any(Serializable.class));
     }
 
     /* This method goes through the synchronization steps made possible to the ThreadSynchronizationManager. */
@@ -79,7 +110,7 @@ public class SieViewControllerTest {
         EventRequest eventRequest = mock(EventRequest.class);
         Event event = mock(Event.class);
         PatientEvent patientEvent = mock(PatientEvent.class);
-        when(patientEvent.getPersonNummer()).thenReturn(PersonNummer.personummer("191212121212"));
+        when(patientEvent.getPersonNummer()).thenReturn(PersonNummer.personummer("7012121212"));
         when(event.getValue()).thenReturn(patientEvent);
         when(eventRequest.getEvent()).thenReturn(event);
 
@@ -95,6 +126,40 @@ public class SieViewControllerTest {
         // Then
         // ... therefore, "update=false" is written to the response.
         assertEquals("update=false", resourceResponse.getContentAsString());
+        verify(portletSession1).setAttribute("personId", "701212-1212");
+    }
+
+    @Test
+    public void testChangeListenerNoChangeInSession() throws Exception {
+
+        // Given
+        MockResourceResponse resourceResponse = new MockResourceResponse();
+        ResourceRequest resourceRequest = mock(ResourceRequest.class);
+
+        PortletSession portletSession = mock(PortletSession.class);
+        when(portletSession.getId()).thenReturn("1234");
+        when(resourceRequest.getPortletSession()).thenReturn(portletSession);
+
+        EventRequest eventRequest = mock(EventRequest.class);
+        Event event = mock(Event.class);
+        PatientEvent patientEvent = mock(PatientEvent.class);
+        when(patientEvent.getPersonNummer()).thenReturn(PersonNummer.personummer("7012121212"));
+        when(event.getValue()).thenReturn(patientEvent);
+        when(eventRequest.getEvent()).thenReturn(event);
+
+        PortletSession portletSession1 = mock(PortletSession.class);
+        when(portletSession1.getAttribute("personId")).thenReturn("701212-1212");
+        when(eventRequest.getPortletSession()).thenReturn(portletSession1);
+
+        // When
+        sieViewController.pollForChange(resourceRequest, resourceResponse);
+        // We get here only since the above method times out...
+        sieViewController.changeListener(eventRequest);
+
+        // Then
+        // ... therefore, "update=false" is written to the response.
+        assertEquals("update=false", resourceResponse.getContentAsString());
+        verify(portletSession1, times(0)).setAttribute(anyString(), anyString()); // No call to setAttribute(...)
     }
 
     @Test
