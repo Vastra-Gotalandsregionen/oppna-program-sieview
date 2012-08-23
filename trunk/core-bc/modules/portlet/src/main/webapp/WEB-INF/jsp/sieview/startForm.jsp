@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<script type="text/javascript" src="/regionportalen-theme/js/rp-patient-context.js?a=cdd"></script>
+<script type="text/javascript" src="/regionportalen-theme/js/rp-patient-context.js"></script>
 
 <portlet:resourceURL var="resourceUrl" escapeXml="false"/>
 
@@ -12,7 +12,7 @@
 <form action="${actionUrl}" method="post">
 
 Personnummer: <input name="personId" type="text" />
-    <input type="submit" value="Go!" />
+    <input type="submit" value="Sök" />
 
 </form>
 

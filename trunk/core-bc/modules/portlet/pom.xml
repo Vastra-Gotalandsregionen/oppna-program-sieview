@@ -21,7 +21,7 @@ Generation time : 2012-08-16 12:57:51 CEST
   <name>${project.artifactId}</name>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
+    <finalName>sieview-portlet</finalName>
     <plugins>
       <plugin>
         <!-- Configure eclipse plug-in to generate a context root that does not have the version number on it -->

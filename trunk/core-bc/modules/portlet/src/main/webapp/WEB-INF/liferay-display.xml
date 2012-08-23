@@ -24,6 +24,6 @@
 
 <display>
 	<category name="VGR">
-		<portlet id="SIEView" />
+		<portlet id="SIEview" />
 	</category>
 </display>

@@ -3,8 +3,7 @@
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<script type="text/javascript" src="/regionportalen-theme/js/rp-patient-context.js?a=abdd"></script>
-<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/listener.js"></script>--%>
+<script type="text/javascript" src="/regionportalen-theme/js/rp-patient-context.js"></script>
 
 <style type="text/css">
     .sie-view-portlet-view .update-person-id-form {
