@@ -177,4 +177,20 @@ public class SieViewControllerTest {
         // Then
         verify(portletSession).removeAttribute("personId");
     }
+
+    @Test
+    public void testResetListenerNothingToRemoveFromSession() throws Exception {
+
+        // Given
+        EventRequest eventRequest = mock(EventRequest.class);
+        PortletSession portletSession = mock(PortletSession.class);
+        when(portletSession.getAttribute("personId")).thenReturn(null);
+        when(eventRequest.getPortletSession()).thenReturn(portletSession);
+
+        // When
+        sieViewController.resetListener(eventRequest);
+
+        // Then
+        verify(portletSession, times(0)).removeAttribute("personId");
+    }
 }
