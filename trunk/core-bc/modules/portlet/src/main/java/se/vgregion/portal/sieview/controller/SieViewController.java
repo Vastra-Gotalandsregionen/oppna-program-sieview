@@ -30,9 +30,10 @@ public class SieViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SieViewController.class);
 
+    static final String VIEW_JSP = "view";
+
     private final ThreadSynchronizationManager threadSynchronizationManager =
             ThreadSynchronizationManager.getInstance();
-
     @Value("${sieViewIframeUrl}")
     private String sieViewIframeUrl;
 
@@ -55,7 +56,7 @@ public class SieViewController {
             model.addAttribute("iframeSrc", String.format(sieViewIframeUrl, personId));
 
             model.addAttribute("personId", personId);
-            return "view";
+            return VIEW_JSP;
         }
 
         return "startForm";
@@ -83,11 +84,10 @@ public class SieViewController {
      * Event phase method which receives {@link PatientEvent}s and stores the personId in the portlet session.
      *
      * @param request the request
-     * @param model   the model
      * @throws InterruptedException InterruptedException
      */
     @EventMapping("{http://vgregion.se/patientcontext/events}pctx.change")
-    public void changeListener(EventRequest request, ModelMap model) throws InterruptedException {
+    public void changeListener(EventRequest request) throws InterruptedException {
         Event event = request.getEvent();
         PatientEvent patient = (PatientEvent) event.getValue();
 
@@ -97,8 +97,8 @@ public class SieViewController {
         if (!patient.getPersonNummer().equals(PersonNummer.personummer(personIdInSession))) {
             // We have a change
             portletSession.setAttribute("personId", patient.getPersonNummer().getNormal());
-
         }
+
         threadSynchronizationManager.notifyBlockedThreads(portletSession);
     }
 
@@ -113,13 +113,13 @@ public class SieViewController {
         PortletSession portletSession = request.getPortletSession();
         if (portletSession.getAttribute("personId") != null) {
             portletSession.removeAttribute("personId");
-            threadSynchronizationManager.notifyBlockedThreads(portletSession);
         }
+        threadSynchronizationManager.notifyBlockedThreads(portletSession);
     }
 
     /**
      * This method blocks until either {@link SieViewController#resetListener(javax.portlet.EventRequest)} or
-     * {@link SieViewController#changeListener(javax.portlet.EventRequest, org.springframework.ui.ModelMap)} is called,
+     * {@link SieViewController#changeListener(javax.portlet.EventRequest)} is called,
      * or a timeout occurs. If it returns due to an update of the patient context "update=true" will be written to the
      * response. If it returns due to a timeout "update=false" will be written to the response.
      *
