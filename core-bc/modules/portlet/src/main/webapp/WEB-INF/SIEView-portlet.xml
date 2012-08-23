@@ -28,6 +28,9 @@
 
   <context:component-scan base-package="se.vgregion.portal.sieview.controller"/>
 
+  <context:property-placeholder location="classpath:security.properties" ignore-resource-not-found="false"
+          ignore-unresolvable="false"/>
+
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
     <property name="prefix" value="/WEB-INF/jsp/sieview/"/>

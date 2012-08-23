@@ -2,6 +2,7 @@ package se.vgregion.portal.sieview.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -32,12 +33,13 @@ public class SieViewController {
     private final ThreadSynchronizationManager threadSynchronizationManager =
             ThreadSynchronizationManager.getInstance();
 
+    @Value("${sieViewIframeUrl}")
+    private String sieViewIframeUrl;
 
     /**
      * Render method to show the SIEview client.
      *
      * @param request  the request
-     * @param response the response
      * @param model    the model
      * @return the view
      */
@@ -50,8 +52,7 @@ public class SieViewController {
 
         if (personId != null) {
 
-            model.addAttribute("iframeSrc", String.format("http://testsieview.vgregion.se/Start.aspx?pnr="
-                    + "%s&cen=19&db=jkir&sid=3006&user=lak1&pwd=melior&cid=0", personId));
+            model.addAttribute("iframeSrc", String.format(sieViewIframeUrl, personId));
 
             model.addAttribute("personId", personId);
             return "view";
@@ -98,7 +99,7 @@ public class SieViewController {
             portletSession.setAttribute("personId", patient.getPersonNummer().getNormal());
 
         }
-        threadSynchronizationManager.notifyBlockedThread(portletSession);
+        threadSynchronizationManager.notifyBlockedThreads(portletSession);
     }
 
     /**
@@ -112,7 +113,7 @@ public class SieViewController {
         PortletSession portletSession = request.getPortletSession();
         if (portletSession.getAttribute("personId") != null) {
             portletSession.removeAttribute("personId");
-            threadSynchronizationManager.notifyBlockedThread(portletSession);
+            threadSynchronizationManager.notifyBlockedThreads(portletSession);
         }
     }
 

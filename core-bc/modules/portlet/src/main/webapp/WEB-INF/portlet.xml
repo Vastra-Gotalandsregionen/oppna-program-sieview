@@ -14,15 +14,15 @@
   id="oppna-program-sieview-core-bc-module-portlet">
   
   <portlet>
-    <portlet-name>SIEView</portlet-name>
+    <portlet-name>SIEview</portlet-name>
     <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
     <supports>
       <mime-type>text/html</mime-type>
     </supports>
 
     <portlet-info>
-      <title>SIEView</title>
-      <short-title>SIEView</short-title>
+      <title>SIEview</title>
+      <short-title>SIEview</short-title>
       <keywords>sieview</keywords>
     </portlet-info>
 
